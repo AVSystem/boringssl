@@ -127,6 +127,7 @@ var cipherSuites = []*cipherSuite{
 	{TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA, 32, 20, ivLenAES, ecdhePSKKA, suiteECDHE | suitePSK, cipherAES, macSHA1, nil},
 	{TLS_PSK_WITH_AES_128_CBC_SHA, 16, 20, ivLenAES, pskKA, suitePSK, cipherAES, macSHA1, nil},
 	{TLS_PSK_WITH_AES_256_CBC_SHA, 32, 20, ivLenAES, pskKA, suitePSK, cipherAES, macSHA1, nil},
+	{TLS_PSK_WITH_AES_128_CBC_SHA256, 16, 20, ivLenAES, pskKA, suitePSK, cipherAES, macSHA256, nil},
 	{TLS_RSA_WITH_NULL_SHA, 0, 20, noIV, rsaKA, 0, cipherNull, macSHA1, nil},
 }
 
@@ -374,6 +375,7 @@ const (
 	TLS_PSK_WITH_AES_256_CBC_SHA                  uint16 = 0x008d
 	TLS_RSA_WITH_AES_128_GCM_SHA256               uint16 = 0x009c
 	TLS_RSA_WITH_AES_256_GCM_SHA384               uint16 = 0x009d
+	TLS_PSK_WITH_AES_128_CBC_SHA256               uint16 = 0x00ae
 	TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA          uint16 = 0xc009
 	TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA          uint16 = 0xc00a
 	TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA           uint16 = 0xc012

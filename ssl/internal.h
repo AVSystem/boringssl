@@ -555,9 +555,10 @@ BSSL_NAMESPACE_BEGIN
 #define SSL_AES (SSL_AES128 | SSL_AES256 | SSL_AES128GCM | SSL_AES256GCM)
 
 // Bits for |algorithm_mac| (symmetric authentication).
-#define SSL_SHA1 0x00000001u
+#define SSL_SHA1   0x00000001u
+#define SSL_SHA256 0x00000004u
 // SSL_AEAD is set for all AEADs.
-#define SSL_AEAD 0x00000002u
+#define SSL_AEAD   0x00000002u
 
 // Bits for |algorithm_prf| (handshake digest).
 #define SSL_HANDSHAKE_MAC_DEFAULT 0x1

@@ -1844,6 +1844,7 @@ var testCipherSuites = []testCipherSuite{
 	{"ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256", TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256},
 	{"PSK_WITH_AES_128_CBC_SHA", TLS_PSK_WITH_AES_128_CBC_SHA},
 	{"PSK_WITH_AES_256_CBC_SHA", TLS_PSK_WITH_AES_256_CBC_SHA},
+	{"PSK_WITH_AES_128_CBC_SHA256", TLS_PSK_WITH_AES_128_CBC_SHA256},
 	{"ECDHE_PSK_WITH_AES_128_CBC_SHA", TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA},
 	{"ECDHE_PSK_WITH_AES_256_CBC_SHA", TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA},
 	{"ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256", TLS_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256},
@@ -11917,9 +11918,9 @@ func addCurveTests() {
 		},
 	})
 
-        // ... and even if there's another curve in the middle because it's the
-        // first classical and first post-quantum "curves" that get key shares
-        // included.
+	// ... and even if there's another curve in the middle because it's the
+	// first classical and first post-quantum "curves" that get key shares
+	// included.
 	testCases = append(testCases, testCase{
 		name: "CECPQ2KeyShareIncludedThird",
 		config: Config{

@@ -260,6 +260,18 @@ static constexpr SSL_CIPHER kCiphers[] = {
      SSL_HANDSHAKE_MAC_SHA384,
     },
 
+    // Cipher AE
+    {
+     TLS1_TXT_PSK_WITH_AES_128_CBC_SHA256,
+     "TLS_PSK_WITH_AES_128_CBC_SHA256",
+     TLS1_CK_PSK_WITH_AES_128_CBC_SHA256,
+     SSL_kPSK,
+     SSL_aPSK,
+     SSL_AES128,
+     SSL_SHA256,
+     SSL_HANDSHAKE_MAC_SHA256,
+    },
+
     // TLS 1.3 suites.
 
     // Cipher 1301
@@ -537,6 +549,7 @@ static const CIPHER_ALIAS kCipherAliases[] = {
     // MAC aliases
     {"SHA1", ~0u, ~0u, ~0u, SSL_SHA1, 0},
     {"SHA", ~0u, ~0u, ~0u, SSL_SHA1, 0},
+    {"SHA256", ~0u, ~0u, ~0u, SSL_SHA256, 0},
 
     // Legacy protocol minimum version aliases. "TLSv1" is intentionally the
     // same as "SSLv3".
@@ -627,6 +640,14 @@ bool ssl_cipher_get_evp_aead(const EVP_AEAD **out_aead,
     }
 
     *out_mac_secret_len = SHA_DIGEST_LENGTH;
+  } else if (cipher->algorithm_mac == SSL_SHA256) {
+    if (cipher->algorithm_enc == SSL_AES128) {
+      *out_aead = EVP_aead_aes_128_cbc_sha256_tls();
+    } else {
+      return false;
+    }
+
+    *out_mac_secret_len = SHA256_DIGEST_LENGTH;
   } else {
     return false;
   }
@@ -1314,9 +1335,19 @@ size_t ssl_cipher_get_record_split_len(const SSL_CIPHER *cipher) {
       return 0;
   }
 
-  // All supported TLS 1.0 ciphers use SHA-1.
-  assert(cipher->algorithm_mac == SSL_SHA1);
-  size_t ret = 1 + SHA_DIGEST_LENGTH;
+  size_t mac_len;
+  switch (cipher->algorithm_mac) {
+    case SSL_SHA1:
+      mac_len = SHA_DIGEST_LENGTH;
+      break;
+    case SSL_SHA256:
+      mac_len = SHA256_DIGEST_LENGTH;
+      break;
+    default:
+      return 0;
+  }
+
+  size_t ret = 1 + mac_len;
   ret += block_size - (ret % block_size);
   return ret;
 }
@@ -1407,6 +1438,8 @@ int SSL_CIPHER_get_digest_nid(const SSL_CIPHER *cipher) {
       return NID_undef;
     case SSL_SHA1:
       return NID_sha1;
+    case SSL_SHA256:
+      return NID_sha256;
   }
   assert(0);
   return NID_undef;
@@ -1671,6 +1704,10 @@ const char *SSL_CIPHER_description(const SSL_CIPHER *cipher, char *buf,
   switch (alg_mac) {
     case SSL_SHA1:
       mac = "SHA1";
+      break;
+
+    case SSL_SHA256:
+      mac = "SHA256";
       break;
 
     case SSL_AEAD:

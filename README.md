@@ -1,3 +1,9 @@
+# AVS fork
+
+This fork add additional ciphersuites such as:
+
+* `TLS_PSK_WITH_AES_128_CBC_SHA256`
+
 # BoringSSL
 
 BoringSSL is a fork of OpenSSL that is designed to meet Google's needs.
